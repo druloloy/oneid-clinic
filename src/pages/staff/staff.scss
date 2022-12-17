@@ -1,0 +1,312 @@
+.container{
+    display: flex;
+
+    .bodyContainer{
+        display: flex;
+        margin-top: 90px;
+        margin-left: 250px;
+        margin-right: 10px;
+        width: 100vw;
+        height: 90vh;
+        gap: 10px;
+        //border: 1px solid black;
+        .scan-wrapper{
+            display: block;
+            width: 40vw;
+            background-color: #FFC7EC;
+           // border: 1px solid black;
+            margin-bottom: 0;
+            .scanContainer{
+                display: flex;
+                justify-content: center;
+                width: 100%;
+               // border: 1px solid black;
+                height: fit-content;
+                margin-top: 200px;
+                input{
+                    border: none;
+                    //border-bottom: 2px solid black;
+                    text-align: center;
+                    font-size: 20px;
+                    width: 20vw;
+                    height: 5vh;
+                }
+            }
+            .searchBtn{
+                margin-top: 80px;
+                display: flex;
+                justify-content: center;
+                //border: 1px solid black;
+                span{
+                    text-align: center;
+                    width: 100px;
+                    padding: 20px;
+                    color: aliceblue;
+                    font-weight: 600;
+                    border-radius: 20px;
+                    background-color: #ff006b;
+                    cursor: pointer;
+                }
+            }
+        }
+        .patientInformation{
+            width: 100%;
+            background-color: #FFC7EC;
+            padding: 10px;
+            //border: 1px solid black;
+            .patientinfoTitle{
+                display: flex;
+                justify-content: center;
+                width: 100%;
+                //border: 1px solid black;
+                font-style: italic;
+            }
+            .patientID{
+                display: flex;
+                justify-content: flex-end;
+                width: 100%;
+                //border: 1px solid black;
+                margin-top: 5rem;
+                input{
+                    background-color: transparent;
+                    text-align: center;
+                    border: none;
+                    font-weight: 600;
+                    font-size: 18px;
+                    width: 10vw;
+                }
+            }
+
+            .info-wrapper{
+                margin-top: 5rem;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 10px;
+                //border: 1px solid black;
+                row-gap: 5rem;
+                
+
+                .name{
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    width: 25vw;
+                    padding: 5px;
+                    //border: 1px solid black;
+                    line-height: 1;
+                    input{
+                        color: black;
+                        background-color: transparent;
+                        text-align: center;
+                        width: 25vw;
+                        height: auto;
+                        font-size: 18px;
+                        font-weight: 600;
+                        padding: 0px;
+                        border: none;
+                        border-bottom: 2px solid black;
+                    }
+                    label{
+                        font-style: italic;
+                        font-size: 12px;
+                    }
+                }
+
+                .birthdate{
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    padding: 5px;
+                    width: 15vw;
+                    //border: 1px solid black;
+                    line-height: 1;
+                    input{
+                        color: black;
+                        background-color: transparent;
+                        text-align: center;
+                        width: 15vw;
+                        height: auto;
+                        font-size: 18px;
+                        font-weight: 600;
+                        padding: 0px;
+                        border: none;
+                        border-bottom: 2px solid black;
+                    }
+                    label{
+                        font-style: italic;
+                        font-size: 12px;
+                    }
+                }
+                .gender{
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    padding: 5px;
+                    width: 14vw;
+                    //border: 1px solid black;
+                    line-height: 1;
+                    input{
+                        color: black;
+                        background-color: transparent;
+                        text-align: center;
+                        width: 14vw;
+                        height: auto;
+                        font-size: 18px;
+                        font-weight: 600;
+                        padding: 0px;
+                        border: none;
+                        border-bottom: 2px solid black;
+                    }
+                    label{
+                        font-style: italic;
+                        font-size: 12px;
+                    }
+                }
+                .address{
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    padding: 5px;
+                    width: 25vw;
+                    //border: 1px solid black;
+                    line-height: 1;
+                    input{
+                        color: black;
+                        background-color: transparent;
+                        text-align: center;
+                        width: 25vw;
+                        height: auto;
+                        font-size: 18px;
+                        font-weight: 600;
+                        padding: 0px;
+                        border: none;
+                        border-bottom: 2px solid black;
+                    }
+                    label{
+                        font-style: italic;
+                        font-size: 12px;
+                    }
+                }
+                .purpose{
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    padding: 5px;
+                    width: 15vw;
+                    //border: 1px solid black;
+                    line-height: 1;
+                    
+                    select{
+                        color: black;
+                        background-color: transparent;
+                        text-align: center;
+                        width: 25vw;
+                        height: auto;
+                        font-size: 18px;
+                        font-weight: 600;
+                        padding: 0px;
+                        border: none;
+                        border-bottom: 2px solid black;
+                    }
+                    
+                    // input{
+                    //     color: black;
+                    //     background-color: transparent;
+                    //     text-align: center;
+                    //     width: 15vw;
+                    //     height: auto;
+                    //     font-size: 18px;
+                    //     font-weight: 600;
+                    //     padding: 0px;
+                    //     border: none;
+                    //     border-bottom: 2px solid black;
+                    // }
+                    label{
+                        font-style: italic;
+                        font-size: 12px;
+                    }
+                }
+
+                .contact{
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    padding: 5px;
+                    width: 14vw;
+                    //border: 1px solid black;
+                    line-height: 1;
+                    input{
+                        color: black;
+                        background-color: transparent;
+                        text-align: center;
+                        width: 14vw;
+                        height: auto;
+                        font-size: 18px;
+                        font-weight: 600;
+                        padding: 0px;
+                        border: none;
+                        border-bottom: 2px solid black;
+                    }
+                    label{
+                        font-style: italic;
+                        font-size: 12px;
+                    }
+                }
+
+                
+            }
+
+            .queue{
+                display: flex;
+                flex-wrap: wrap;
+                width: 20vw;
+                justify-content: center;
+                //border: 1px solid black;
+                span{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 50px;
+                    font-weight: 600;
+                    color: aliceblue;
+                    width: 8vw;
+                    border: 1px solid black;
+                    height: 12vh;
+                    background-color: #FF006B;
+                    border-radius: 10px;
+                }
+                label{
+                    display: flex;
+                    justify-content: center;
+                    font-style: italic;
+                    font-size: 12px;
+                    width: 100%;
+                    
+                }
+                
+            }
+            .add-btn{
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                padding: 10px;
+                //border: 1px solid black;
+                span{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 10px;
+                    background-color: #FF006B;
+                    width: 15vw;
+                    height: 5vh;
+                    font-size: 20px;
+                    font-weight: 600;
+                    padding: 20px;
+                    color: aliceblue;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
