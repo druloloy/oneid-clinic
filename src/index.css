@@ -1,3 +1,36 @@
+/** @format */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*::-webkit-scrollbar {
+	width: 1rem;
+}
+
+*::-webkit-scrollbar-track {
+	background: #faa7c8;
+}
+
+*::-webkit-scrollbar-thumb {
+	background-color: #ee4681;
+	border: 3px solid transparent;
+	border-radius: 9px;
+	background-clip: content-box;
+}
+
+::selection {
+	background-color: #9f153a73;
+	color: #841733;
+}
+
+.bg-blur {
+	backdrop-filter: blur(10px);
+}
+
+body {
+	@apply text-primary-900;
+}
+
+button {
+	@apply drop-shadow-sm;
+}
