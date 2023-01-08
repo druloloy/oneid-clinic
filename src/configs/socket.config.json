@@ -1,8 +1,0 @@
-{
-    "baseUrl": "http://localhost:5000/live_staff",
-    "options": {
-        "transports": ["websocket"],
-        "reconnectionAttempts": 3,
-        "withCredentials": true
-    }
-}

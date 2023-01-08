@@ -18,7 +18,9 @@ const useVerifyToken = () => {
 			})
 			.catch((error) => {
 				dispatch({ type: 'LOGGED_OFF' });
-				window.location.href = '/';
+				if (window.location.pathname !== '/') {
+					window.location.href = '/';
+				}
 			});
 	}, [dispatch]);
 };

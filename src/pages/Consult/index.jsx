@@ -13,6 +13,7 @@ import Sidebar from '../../components/staffsidebar/Sidebar';
 import ConditionView from './ConditionView';
 import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import NextSVG from '../../assets/misc/undraw_moving_forward_re_rs8p.svg';
 import {
 	MdChevronRight,
 	MdCancel,
@@ -49,6 +50,7 @@ const patientModel = {
 };
 
 const PatientInfoView = () => {
+	document.title = 'Consultation';
 	const [toggleConditionView, setToggleConditionView] = useState(false);
 	const [selectedViewCondition, setSelectedViewCondition] = useState({});
 	const [selectedPrescription, setSelectedPrescription] = useState(0);
@@ -64,7 +66,7 @@ const PatientInfoView = () => {
 	const [prescriptions, setPrescriptions] = useState([]);
 	const [nextPatient, setNextPatient] = useState(patientModel);
 	const [patient, setPatient] = useState(patientModel);
-	useRedirect();
+	// useRedirect();
 
 	const navigate = useNavigate();
 	const { state } = useContext(AuthContext);
@@ -136,8 +138,11 @@ const PatientInfoView = () => {
 	const getNextPatient = async () => {
 		removeLocalPatient();
 		if (nextPatient.id === '') {
+			alert('No more patients in queue');
 			// If there is no next patient, finish the current patient and log the result
-			QueueService.finish(socket, patient.id);
+			if (patient.id) {
+				QueueService.finish(socket, patient.id);
+			}
 			setPatient(patientModel);
 			console.log('No more patients in queue', nextPatient, patient);
 			return;
@@ -165,9 +170,29 @@ const PatientInfoView = () => {
 	};
 
 	const finishCurrentPatient = () => {
-		QueueService.finish(socket, patient.id);
-		setPatient(patientModel);
-		removeLocalPatient();
+		const finish = () => {
+			QueueService.finish(socket, patient.id);
+			setPatient(patientModel);
+			removeLocalPatient();
+		};
+
+		// if fields are blank, confirm finish
+		if (
+			consultation.condition === '' &&
+			consultation.treatments.length === 0 &&
+			consultation.prescriptions.length === 0 &&
+			consultation.nextConsultation === '' &&
+			consultation.remarks === ''
+		) {
+			finish();
+		} else {
+			// if fields are filled, confirm finish
+			if (
+				window.confirm('Are you sure you want to finish this patient?')
+			) {
+				finish();
+			}
+		}
 	};
 
 	const selectCondition = (id) => {
@@ -209,206 +234,248 @@ const PatientInfoView = () => {
 			<Navbar />
 			<div className="w-full h-full flex flex-row overflow-hidden">
 				<Sidebar />
-				<div className="w-full h-full flex flex-row pt-20 p-4 gap-4">
+				<div className="relative w-full h-full flex flex-row pt-20 p-4 gap-4">
 					<div className="basis-2/5 flex flex-col gap-4">
 						<div className="w-full flex flex-row gap-4 justify-evenly items-center">
-							<button
-								className="flex-1 flex flex-row justify-center items-center py-2 rounded-lg text-sm text-primary-50 font-bold bg-red-500 gap-2 transition-all ease-in-out duration-300 hover:bg-red-600"
-								onClick={() => removeCurrentPatient()}>
-								<MdCancel className="text-xl font-bold" />
-								Cancel
-							</button>
+							{
+								// If there is no patient, show the next patient
+								patient.id !== '' && (
+									<button
+										className="flex-1 flex flex-row justify-center items-center py-2 rounded-lg text-sm text-primary-50 font-bold bg-red-500 gap-2 transition-all ease-in-out duration-300 hover:bg-red-600"
+										onClick={() => removeCurrentPatient()}>
+										<MdCancel className="text-xl font-bold" />
+										Cancel
+									</button>
+								)
+							}
 							<button
 								className="flex-1 flex flex-row justify-center items-center py-2 rounded-lg text-sm text-primary-50 font-bold bg-primary-500 gap-2 transition-all ease-in-out duration-300 hover:bg-primary-600"
 								onClick={() => getNextPatient()}>
 								Next{' '}
 								<MdChevronRight className="text-xl font-bold" />
 							</button>
-							<button
-								className="flex-[2] flex flex-row justify-center items-center py-2 rounded-lg text-sm text-primary-500 border-2 border-primary-500 font-bold gap-2 transition-all ease-in-out duration-300 hover:bg-primary-500 hover:text-primary-50"
-								onClick={() => finishCurrentPatient()}>
-								Finish{' '}
-								<MdOutlineDoneAll className="text-xl font-bold" />
-							</button>
+							{patient.id !== '' && (
+								<button
+									className="flex-[2] flex flex-row justify-center items-center py-2 rounded-lg text-sm text-primary-500 border-2 border-primary-500 font-bold gap-2 transition-all ease-in-out duration-300 hover:bg-primary-500 hover:text-primary-50"
+									onClick={() => finishCurrentPatient()}>
+									Finish{' '}
+									<MdOutlineDoneAll className="text-xl font-bold" />
+								</button>
+							)}
 						</div>
 
-						<div className="w-full max-h-128 flex flex-col justify-start items-center bg-white p-4 rounded-lg overflow-y-auto">
-							<div className="w-full p-2 flex flex-row justify-between items-center gap-2 mb-4 flex-wrap">
-								<h1 className="font-bold text-xl flex flex-row items-center">
-									<MdMedication className="text-2xl" />
-									Consult this Patient
-								</h1>
-								<div className="flex flex-row items-center gap-2">
-									<button
-										onClick={() => clearConsultation()}
-										className="flex flex-row justify-center items-center px-2 py-1 rounded-lg text-primary-50 font-bold bg-red-500 gap-2 transition-all ease-in-out duration-300 hover:bg-red-600">
-										<MdCancel className="text-2xl font-bold" />
-										Clear
-									</button>
-									<button
-										className="flex flex-row justify-center items-center px-2 py-1 rounded-lg text-primary-500 font-bold border-2 border-primary-500 gap-2 transition-all ease-in-out duration-300 hover:bg-primary-600 hover:text-primary-50 hover:border-primary-600"
-										onClick={consultPatient}>
-										<MdCheck className="text-2xl font-bold" />
-										Save
-									</button>
-								</div>
-							</div>
-
-							<div className="w-full flex flex-row justify-between items-start gap-4 p-2 flex-wrap">
-								<h3 className="w-1/4 font-bold text-xl">
-									Condition
-								</h3>
-								<div className="flex-1 flex flex-col">
-									<input
-										type="text"
-										value={consultation.condition}
-										className="flex-1 p-2 rounded-lg border-2 border-gray-300 focus:border-primary-500 focus:outline-none"
-										placeholder="Required"
-										onChange={(e) =>
-											setConsultation({
-												...consultation,
-												condition: e.target.value,
-											})
+						{patient.id !== '' && (
+							<div className="w-full max-h-128 flex flex-col justify-start items-center bg-white p-4 rounded-lg overflow-y-auto">
+								<div className="w-full p-2 flex flex-row justify-between items-center gap-2 mb-4 flex-wrap">
+									<h1 className="font-bold text-xl flex flex-row items-center">
+										<MdMedication className="text-2xl" />
+										Consult this Patient
+									</h1>
+									<div className="flex flex-row items-center gap-2">
+										{
+											// show button if fields are not empty
+											consultation.condition !== '' ||
+											consultation.treatments.length !==
+												0 ||
+											consultation.prescriptions
+												.length !== 0 ||
+											consultation.nextConsultation !==
+												'' ||
+											consultation.remarks !== '' ? (
+												<button
+													onClick={() =>
+														clearConsultation()
+													}
+													className="flex flex-row justify-center items-center px-2 py-1 rounded-lg text-primary-50 font-bold bg-red-500 gap-2 transition-all ease-in-out duration-300 hover:bg-red-600">
+													<MdCancel className="text-2xl font-bold" />
+													Clear
+												</button>
+											) : null
 										}
-										required
-									/>
-									<p className="text-primary-300"></p>
-								</div>
-							</div>
-
-							<div className="w-full flex flex-row justify-between items-start gap-4 p-2 flex-wrap">
-								<h3 className="w-1/4 font-bold text-xl">
-									Treatments
-								</h3>
-								<div className="flex-1 flex flex-col">
-									<input
-										type="text"
-										value={consultation.treatments}
-										className="flex-1 p-2 rounded-lg border-2 border-gray-300 focus:border-primary-500 focus:outline-none"
-										placeholder="Optional"
-										onChange={(e) =>
-											setConsultation({
-												...consultation,
-												treatments:
-													e.target.value.split(','),
-											})
-										}
-									/>
-									<p className="text-primary-300">
-										Separate treatments with a comma.
-									</p>
-								</div>
-							</div>
-
-							<div className="w-full flex flex-row justify-evenly items-start gap-4 p-2 flex-wrap">
-								<h3 className="basis-1/4 font-bold text-xl">
-									Prescriptions
-								</h3>
-								<div className="flex-1 flex flex-col">
-									<div className="flex flex-row flex-wrap justify-start items-center gap-2">
-										{consultation?.prescriptions.map(
-											(p, i) => (
-												<div
-													key={i}
-													className="flex flex-row justify-start items-center rounded-full text-primary-50 bg-primary-500">
-													<p
-														className="font-bold bg-primary-900 px-2 rounded-full cursor-pointer"
-														onClick={() => {
-															setSelectedPrescription(
-																i
-															);
-															openPrescriptionModal();
-														}}>
-														{p.name}
-													</p>
-													<MdCancel
-														className="text-xl cursor-pointer"
-														onClick={() =>
-															removePrescription(
-																i
-															)
-														}
-													/>
-												</div>
-											)
-										)}
-										<MdAddCircle
-											className="text-2xl cursor-pointer"
-											onClick={() => {
-												setSelectedPrescription(-1);
-												openPrescriptionModal();
-											}}
-										/>
+										<button
+											className="flex flex-row justify-center items-center px-2 py-1 rounded-lg text-primary-500 font-bold border-2 border-primary-500 gap-2 transition-all ease-in-out duration-300 hover:bg-primary-600 hover:text-primary-50 hover:border-primary-600"
+											onClick={consultPatient}>
+											<MdCheck className="text-2xl font-bold" />
+											Save
+										</button>
 									</div>
+								</div>
 
-									<p className="text-primary-300 list-disc">
-										Click on the + button to add a
-										prescription.
-									</p>
-									<p className="text-primary-300 list-disc">
-										Click on each pills to display more
-										details.
-									</p>
+								<div className="w-full flex flex-row justify-between items-start gap-4 p-2 flex-wrap">
+									<h3 className="w-1/4 font-bold text-xl">
+										Condition
+									</h3>
+									<div className="flex-1 flex flex-col">
+										<input
+											type="text"
+											value={consultation.condition}
+											className="flex-1 p-2 rounded-lg border-2 border-gray-300 focus:border-primary-500 focus:outline-none"
+											placeholder="Required"
+											onChange={(e) =>
+												setConsultation({
+													...consultation,
+													condition: e.target.value,
+												})
+											}
+											required
+										/>
+										<p className="text-primary-300"></p>
+									</div>
 								</div>
-							</div>
 
-							<div className="w-full flex flex-row justify-between items-start gap-4 p-2 flex-wrap">
-								<h3 className="w-1/4 font-bold text-xl">
-									Next Consultation
-								</h3>
-								<div className="flex-1 flex flex-col">
-									<input
-										type="date"
-										min={moment
-											.utc()
-											.local()
-											.format('YYYY-MM-DD')}
-										value={consultation.nextConsultation}
-										onChange={(e) =>
-											setConsultation({
-												...consultation,
-												nextConsultation:
-													e.target.value,
-											})
-										}
-										required
-										className="flex-1 p-2 rounded-lg border-2 border-gray-300 focus:border-primary-500 focus:outline-none"
-									/>
-									<p className="text-primary-300">
-										Leave blank if no next consultation.
-									</p>
+								<div className="w-full flex flex-row justify-between items-start gap-4 p-2 flex-wrap">
+									<h3 className="w-1/4 font-bold text-xl">
+										Treatments
+									</h3>
+									<div className="flex-1 flex flex-col">
+										<input
+											type="text"
+											value={consultation.treatments}
+											className="flex-1 p-2 rounded-lg border-2 border-gray-300 focus:border-primary-500 focus:outline-none"
+											placeholder="Optional"
+											onChange={(e) =>
+												setConsultation({
+													...consultation,
+													treatments:
+														e.target.value.split(
+															','
+														),
+												})
+											}
+										/>
+										<p className="text-primary-300">
+											Separate treatments with a comma.
+										</p>
+									</div>
+								</div>
+
+								<div className="w-full flex flex-row justify-evenly items-start gap-4 p-2 flex-wrap">
+									<h3 className="basis-1/4 font-bold text-xl">
+										Prescriptions
+									</h3>
+									<div className="flex-1 flex flex-col">
+										<div className="flex flex-row flex-wrap justify-start items-center gap-2">
+											{consultation?.prescriptions.map(
+												(p, i) => (
+													<div
+														key={i}
+														className="flex flex-row justify-start items-center rounded-full text-primary-50 bg-primary-500">
+														<p
+															className="font-bold bg-primary-900 px-2 rounded-full cursor-pointer"
+															onClick={() => {
+																setSelectedPrescription(
+																	i
+																);
+																openPrescriptionModal();
+															}}>
+															{p.name}
+														</p>
+														<MdCancel
+															className="text-xl cursor-pointer"
+															onClick={() =>
+																removePrescription(
+																	i
+																)
+															}
+														/>
+													</div>
+												)
+											)}
+											<MdAddCircle
+												className="text-2xl cursor-pointer"
+												onClick={() => {
+													setSelectedPrescription(-1);
+													openPrescriptionModal();
+												}}
+											/>
+										</div>
+
+										<p className="text-primary-300 list-disc">
+											Click on the + button to add a
+											prescription.
+										</p>
+										<p className="text-primary-300 list-disc">
+											Click on each pills to display more
+											details.
+										</p>
+									</div>
+								</div>
+
+								<div className="w-full flex flex-row justify-between items-start gap-4 p-2 flex-wrap">
+									<h3 className="w-1/4 font-bold text-xl">
+										Next Consultation
+									</h3>
+									<div className="flex-1 flex flex-col">
+										<input
+											type="date"
+											min={moment
+												.utc()
+												.local()
+												.format('YYYY-MM-DD')}
+											value={
+												consultation.nextConsultation
+											}
+											onChange={(e) =>
+												setConsultation({
+													...consultation,
+													nextConsultation:
+														e.target.value,
+												})
+											}
+											required
+											className="flex-1 p-2 rounded-lg border-2 border-gray-300 focus:border-primary-500 focus:outline-none"
+										/>
+										<p className="text-primary-300">
+											Leave blank if no next consultation.
+										</p>
+									</div>
+								</div>
+								<div className="w-full flex flex-row justify-between items-start gap-4 p-2 flex-wrap">
+									<h3 className="w-1/4 font-bold text-xl">
+										Remarks
+									</h3>
+									<div className="flex-1 flex flex-col">
+										<textarea
+											rows="5"
+											placeholder="Optional"
+											value={consultation.remarks}
+											onChange={(e) =>
+												setConsultation({
+													...consultation,
+													remarks: e.target.value,
+												})
+											}
+											className="flex-1 p-2 rounded-lg border-2 border-gray-300 focus:border-primary-500 focus:outline-none"
+										/>
+										<p className="text-primary-300"></p>
+									</div>
 								</div>
 							</div>
-							<div className="w-full flex flex-row justify-between items-start gap-4 p-2 flex-wrap">
-								<h3 className="w-1/4 font-bold text-xl">
-									Remarks
-								</h3>
-								<div className="flex-1 flex flex-col">
-									<textarea
-										rows="5"
-										placeholder="Optional"
-										value={consultation.remarks}
-										onChange={(e) =>
-											setConsultation({
-												...consultation,
-												remarks: e.target.value,
-											})
-										}
-										className="flex-1 p-2 rounded-lg border-2 border-gray-300 focus:border-primary-500 focus:outline-none"
-									/>
-									<p className="text-primary-300"></p>
-								</div>
-							</div>
+						)}
+					</div>
+
+					{patient.id && (
+						<div className="basis-3/5 flex flex-col justify-start items-center gap-4 overflow-hidden">
+							<PatientDetailsCard data={patient} />
+							<PatientConsultations
+								data={patient?.consultations}
+								selectCondition={selectCondition}
+							/>
 						</div>
-					</div>
+					)}
 
-					<div className="basis-3/5 flex flex-col justify-start items-center gap-4 overflow-hidden">
-						<PatientDetailsCard data={patient} />
-						<PatientConsultations
-							data={patient?.consultations}
-							selectCondition={selectCondition}
-						/>
-					</div>
+					{!patient.id && (
+						<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 flex flex-col justify-center items-center">
+							<img
+								src={NextSVG}
+								alt="Next Please"
+								className="w-36 h-36"
+							/>
+							<p className="text-2xl font-bold">
+								Click the "Next" Button to get started
+							</p>
+						</div>
+					)}
 				</div>
 			</div>
 			<ConditionView

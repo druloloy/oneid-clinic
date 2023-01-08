@@ -9,7 +9,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Queue from './pages/queue';
 import { QueueContextProvider } from './context/QueueContext';
 import useVerifyToken from './effects/useVerifyToken';
-
+import PrivateRoute from './routes/PrivateRoute';
+import PublicRoute from './routes/PublicRoute';
+import Page404 from './pages/404/Page404';
 function App() {
 	useVerifyToken();
 	return (
@@ -17,20 +19,29 @@ function App() {
 			{/* routers with authentication and queueprovider */}
 			<BrowserRouter>
 				<Routes>
-					<Route index path="/" element={<Login />} />
+					<Route element={<PublicRoute />}>
+						<Route path="/" element={<Login />} exact />
+					</Route>
 				</Routes>
 				<QueueContextProvider>
 					<Routes>
-						<Route path="/">
-							<Route path="/dashboard" element={<Dashboard />} />
+						<Route element={<PrivateRoute />}>
+							<Route
+								path="/dashboard"
+								element={<Dashboard />}
+								exact
+							/>
 							<Route
 								path="/consult"
-								element={<PatientInfoView />}
+								element={<PatientInfoView exact />}
 							/>
-							<Route path="/queue" element={<Queue />} />
+							<Route path="/queue" element={<Queue />} exact />
 						</Route>
 					</Routes>
 				</QueueContextProvider>
+				<Routes>
+					<Route path="*" element={<Page404 />} />
+				</Routes>
 			</BrowserRouter>
 		</div>
 	);

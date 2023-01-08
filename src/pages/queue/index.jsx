@@ -13,10 +13,11 @@ import { MdMale, MdFemale } from 'react-icons/md';
 import useRedirect from '../../effects/useRedirect';
 
 const Queue = () => {
+	document.title = 'Patients Queue';
 	const { queue } = useContext(QueueContext);
 	const [ongoing, setOngoing] = useState(0);
 	const [waiting, setWaiting] = useState([]);
-	useRedirect();
+	// useRedirect();
 
 	useMemo(() => {
 		if (queue.length > 0) {

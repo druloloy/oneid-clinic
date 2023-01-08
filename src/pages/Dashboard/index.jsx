@@ -12,16 +12,16 @@ import { useMemo } from 'react';
 import { MdOutlineClear, MdOutlineSearch } from 'react-icons/md';
 import BlankCanvas from '../../components/BlankCanvas';
 
-import useRedirect from '../../effects/useRedirect';
-
 const StaffUI = () => {
+	document.title = 'Dashboard';
 	const { queue, _, socket } = useContext(QueueContext);
 	const [patient, setPatient] = useState({});
-	const [purpose, setPurpose] = useState('Consultation');
+	const [purpose, setPurpose] = useState('');
 	const [id, setId] = useState('');
 	const [patientInfo, setPatientInfo] = useState(patientInfoTemplate);
 	const [cardItems, setCardItems] = useState(cardItemsTemplate);
-	useRedirect();
+	const [activities, setActivities] = useState([]);
+	// useRedirect();
 
 	const decryptId = async (id) => {
 		const decryptedId = await UserService.decrypt(id);
@@ -66,6 +66,17 @@ const StaffUI = () => {
 			);
 		}
 	}, [patient, setPatientInfo]);
+
+	useEffect(() => {
+		const getActivities = async () => {
+			await UserService.getActivities().then((data) => {
+				setActivities(data.content);
+				setPurpose(data.content[0]);
+			});
+		};
+
+		getActivities();
+	}, []);
 
 	useMemo(() => {
 		const ongoingNumber =
@@ -174,36 +185,13 @@ const StaffUI = () => {
 												setPurpose(e.target.value)
 											}
 											defaultValue={purpose}>
-											<option
-												className="item"
-												value="Consultation">
-												Consultation
-											</option>
-											<option
-												className="item"
-												value="COVID Vaccine">
-												COVID Vaccine
-											</option>
-											<option
-												className="item"
-												value="Other Vaccine">
-												Other Vaccine
-											</option>
-											<option
-												className="item"
-												value="Family Planning">
-												Family Planning
-											</option>
-											<option
-												className="item"
-												value="NCD Checkup">
-												NCD Checkup
-											</option>
-											<option
-												className="item"
-												value="Dental Checkup">
-												Dental Checkup
-											</option>
+											{activities.map((item, index) => (
+												<option
+													key={index}
+													value={item}>
+													{item}
+												</option>
+											))}
 										</select>
 									</div>
 								</div>

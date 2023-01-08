@@ -8,7 +8,7 @@ const useRedirect = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (!state.authenticated) {
+		if (!state.authenticated && window.location.pathname !== '/') {
 			return navigate('/');
 		}
 		if (state.authenticated && window.location.pathname === '/') {
