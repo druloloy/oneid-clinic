@@ -5,7 +5,7 @@
 import Login from './pages/login/Login';
 import PatientInfoView from './pages/Consult';
 import Dashboard from './pages/Dashboard';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Queue from './pages/queue';
 import { QueueContextProvider } from './context/QueueContext';
 import useVerifyToken from './effects/useVerifyToken';
@@ -19,12 +19,11 @@ function App() {
 			{/* routers with authentication and queueprovider */}
 			<BrowserRouter>
 				<Routes>
-					<Route element={<PublicRoute />}>
-						<Route path="/" element={<Login />} exact />
-					</Route>
-				</Routes>
-				<QueueContextProvider>
-					<Routes>
+					<Route path="/">
+						<Route element={<PublicRoute />}>
+							<Route index element={<Login />} exact />
+						</Route>
+
 						<Route element={<PrivateRoute />}>
 							<Route
 								path="/dashboard"
@@ -37,9 +36,7 @@ function App() {
 							/>
 							<Route path="/queue" element={<Queue />} exact />
 						</Route>
-					</Routes>
-				</QueueContextProvider>
-				<Routes>
+					</Route>
 					<Route path="*" element={<Page404 />} />
 				</Routes>
 			</BrowserRouter>

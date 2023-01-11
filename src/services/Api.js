@@ -8,9 +8,7 @@ export const baseURL =
 		: process.env.REACT_APP_PROD_URL + apiVersion;
 const defaultPath = 'staff/';
 
-// const whitelistPaths = [
-//     '/',
-// ];
+console.log(baseURL);
 
 const instance = axios.create({
 	baseURL: baseURL + defaultPath,

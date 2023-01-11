@@ -1,31 +1,45 @@
-import { useEffect } from 'react';
+/** @format */
+
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import QueueService from '../services/QueueService';
+
 const useMountPatient = (socket, callback) => {
-    useEffect(() => {
-        QueueService.getAllPatients(socket, callback); 
-        return () => {
-            QueueService.Off.getAllPatients(socket);
-        }
-    }, [socket, callback]);
+	const { state } = useContext(AuthContext);
 
-    useEffect(() => {
-        socket.on('error', (err) => {
-            alert(err);
-        });
+	useEffect(() => {
+		if (!JSON.parse(state.authenticated)) {
+			socket.disconnect();
+		} else {
+			socket.connect();
+		}
+	}, [state.authenticated, socket]);
 
-        socket.on('connect_error', (err) => {
-            alert('Connection error: ' + err);
-        });
-        socket.on('connect_failed', (err) => {
-            alert('Connection failed: ' + err);
-        });
+	useEffect(() => {
+		QueueService.getAllPatients(socket, callback);
+		return () => {
+			QueueService.Off.getAllPatients(socket);
+		};
+	}, [socket, callback]);
 
-        return () => {
-            socket.off('error');
-            socket.off('connect_error');
-            socket.off('connect_failed');
-        }
-    }, [socket]);
-}
+	useEffect(() => {
+		socket.on('error', (err) => {
+			alert(err);
+		});
+
+		socket.on('connect_error', (err) => {
+			alert('Connection error: ' + err);
+		});
+		socket.on('connect_failed', (err) => {
+			alert('Connection failed: ' + err);
+		});
+
+		return () => {
+			socket.off('error');
+			socket.off('connect_error');
+			socket.off('connect_failed');
+		};
+	}, [socket]);
+};
 
 export default useMountPatient;

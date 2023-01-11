@@ -1,9 +1,10 @@
 /** @format */
 
-import { createContext, useState } from 'react';
+import { createContext, useState, useContext } from 'react';
 import io from 'socket.io-client';
 import useMountPatient from '../effects/useMountPatient';
 import config from '../configs/socket.config';
+import { AuthContext } from './AuthContext';
 const { baseUrl, options } = config;
 
 const socket = io(baseUrl, options);
