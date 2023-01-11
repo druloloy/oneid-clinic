@@ -38,7 +38,6 @@ import { QueueContext } from '../../context/QueueContext';
 import moment from 'moment';
 import UserService from '../../services/UserService';
 import BlankCanvas from '../../components/BlankCanvas';
-import useRedirect from '../../effects/useRedirect';
 
 const patientModel = {
 	id: '',
@@ -50,7 +49,7 @@ const patientModel = {
 };
 
 const PatientInfoView = () => {
-	document.title = 'Consultation';
+	document.title = 'Consultation | OneID';
 	const [toggleConditionView, setToggleConditionView] = useState(false);
 	const [selectedViewCondition, setSelectedViewCondition] = useState({});
 	const [selectedPrescription, setSelectedPrescription] = useState(0);

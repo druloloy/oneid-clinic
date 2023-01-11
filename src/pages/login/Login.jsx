@@ -6,7 +6,7 @@ import Logo from '../../assets/logo/compressed/oneid_256x256.png';
 import SVG from '../../assets/misc/undraw_working_re_ddwy.svg';
 import { useNavigate } from 'react-router-dom';
 const Login = () => {
-	document.title = 'Login';
+	document.title = 'Login | OneID';
 
 	const navigate = useNavigate();
 	const { dispatch } = useContext(AuthContext);

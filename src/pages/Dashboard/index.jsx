@@ -13,7 +13,7 @@ import { MdOutlineClear, MdOutlineSearch } from 'react-icons/md';
 import BlankCanvas from '../../components/BlankCanvas';
 
 const StaffUI = () => {
-	document.title = 'Dashboard';
+	document.title = 'Dashboard | OneID';
 	const { queue, _, socket } = useContext(QueueContext);
 	const [patient, setPatient] = useState({});
 	const [purpose, setPurpose] = useState('');

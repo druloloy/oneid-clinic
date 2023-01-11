@@ -13,7 +13,7 @@ import { MdMale, MdFemale } from 'react-icons/md';
 import useRedirect from '../../effects/useRedirect';
 
 const Queue = () => {
-	document.title = 'Patients Queue';
+	document.title = 'Patients Queue | OneID';
 	const { queue } = useContext(QueueContext);
 	const [ongoing, setOngoing] = useState(0);
 	const [waiting, setWaiting] = useState([]);
